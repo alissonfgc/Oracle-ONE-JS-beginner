@@ -1,10 +1,12 @@
-let maxSecretNumber = 100;
+let listOfDrawnedNumbers = [];
+let maxSecretNumber = 10;
 let secretNumber = generateRandomNumber(maxSecretNumber);
 let counter = 1;
 
 function changeTextContent(tag, text) {
     let field = document.querySelector(tag);
     field.innerHTML = text;
+    responsiveVoice.speak(text, 'Brazilian Portuguese Female', {rate:1.2});
 }
 
 function verifyTry() {
@@ -20,8 +22,7 @@ function verifyTry() {
         cleanField();
     } else {
         let stringTry = counter > 1 ? ' tentativas' : ' tentativa';
-        changeTextContent('h1', 'Voce acertou!');
-        changeTextContent('p', 'Voce acertou o numero secreto ' + secretNumber + ', com ' + counter + stringTry + '!');
+        changeTextContent('p', 'Voce acertou! o numero secreto ' + secretNumber + ', com ' + counter + stringTry + '!');
         document.getElementById('reset').removeAttribute('disabled');
     }
 
@@ -33,15 +34,23 @@ function cleanField() {
 }
 
 function generateRandomNumber(maxSecretNumber) {
-    return parseInt(Math.random() * maxSecretNumber + 1);
+    let drawnedNumber = parseInt(Math.random() * maxSecretNumber + 1);
+
+    if (!(listOfDrawnedNumbers.includes(drawnedNumber)) && listOfDrawnedNumbers.length < maxSecretNumber) {
+        listOfDrawnedNumbers.push(drawnedNumber);
+        return drawnedNumber;
+    } else if (listOfDrawnedNumbers.includes(drawnedNumber) && listOfDrawnedNumbers.length < maxSecretNumber) {
+        return generateRandomNumber(maxSecretNumber);
+    } else {
+        listOfDrawnedNumbers = [];
+        return generateRandomNumber(maxSecretNumber);
+    }
 }
 
 function start() {
-    changeTextContent('h1', 'Jogo do bixo');
+    changeTextContent('h1', 'Adivinhe o numero');
     changeTextContent('p', 'Digite um numero de 1 a ' + maxSecretNumber);
 }
-
-start();
 
 function resetGame() {
     secretNumber = generateRandomNumber(maxSecretNumber);
@@ -50,3 +59,5 @@ function resetGame() {
     start();
     document.getElementById('reset').setAttribute('disabled', true);
 }
+
+start();
