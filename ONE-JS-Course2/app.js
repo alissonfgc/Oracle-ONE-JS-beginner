@@ -22,6 +22,7 @@ function verifyTry() {
         let stringTry = counter > 1 ? ' tentativas' : ' tentativa';
         changeTextContent('h1', 'Voce acertou!');
         changeTextContent('p', 'Voce acertou o numero secreto ' + secretNumber + ', com ' + counter + stringTry + '!');
+        document.getElementById('reset').removeAttribute('disabled');
     }
 
 }
@@ -35,5 +36,17 @@ function generateRandomNumber(maxSecretNumber) {
     return parseInt(Math.random() * maxSecretNumber + 1);
 }
 
-changeTextContent('h1', 'Jogo do bixo');
-changeTextContent('p', 'Digite um numero de 1 a ' + maxSecretNumber);
+function start() {
+    changeTextContent('h1', 'Jogo do bixo');
+    changeTextContent('p', 'Digite um numero de 1 a ' + maxSecretNumber);
+}
+
+start();
+
+function resetGame() {
+    secretNumber = generateRandomNumber(maxSecretNumber);
+    counter = 1;
+    cleanField();
+    start();
+    document.getElementById('reset').setAttribute('disabled', true);
+}
